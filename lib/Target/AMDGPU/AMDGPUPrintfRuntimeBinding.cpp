@@ -40,10 +40,10 @@ public:
   static char ID;
   explicit AMDGPUPrintfRuntimeBinding();
   SmallVector<Value*, 32> Printfs;
-  const char* getPassName() const;
-  bool runOnModule(Module &M);
-  bool doInitialization(Module &M);
-  bool doFinalization(Module &M);
+  const char* getPassName() const override;
+  bool runOnModule(Module &M) override;
+  bool doInitialization(Module &M) override;
+  bool doFinalization(Module &M) override;
   void getConversionSpecifiers(
               SmallVectorImpl<char> &OpConvSpecifiers,
               StringRef fmt,
@@ -544,7 +544,7 @@ bool AMDGPUPrintfRuntimeBinding::lowerPrintfForGpu(Module &M) {
                 Value *ANumV = ConstantInt::get( Int32Ty, ANum, false);
                 WhatToStore.push_back(ANumV);
               }
-              delete MyNewStr;
+              delete[] MyNewStr;
             } else {
               // Empty string, give a hint to RT it is no NULL
               Value *ANumV = ConstantInt::get(Int32Ty, 0xFFFFFF00, false);
